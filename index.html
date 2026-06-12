@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nuestro chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <img id="loginPhoto" class="login-photo" alt="Nosotras">
+      <div class="login-copy">
+        <span class="login-kicker">Nuestro espacio privado</span>
+        <h1>Bienvenida, preciosa</h1>
+        <p>Ingresa la contraseña para abrir nuestro chat.</p>
+      </div>
+      <form id="loginForm" class="login-form">
+        <label for="passwordInput">Contraseña</label>
+        <div class="password-field">
+          <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Escribe la contraseña">
+          <button id="togglePassword" type="button" aria-label="Mostrar u ocultar contraseña">
+            <svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <button class="login-button" type="submit">Entrar al chat</button>
+        <p id="loginError" class="login-error"></p>
+      </form>
+      <p class="login-note">El contenido se descifra únicamente en este dispositivo.</p>
+    </div>
+  </section>
+
+  <div id="chatApp" hidden>
+    <div class="page-stage">
+      <section class="phone-shell">
+        <header class="chat-header">
+          <button class="icon-btn back-btn" aria-label="Volver">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19 8.5 12l7-7"/></svg>
+          </button>
+          <img id="profilePhoto" class="profile-photo" alt="Foto de perfil">
+          <div class="contact-copy">
+            <strong id="contactName"></strong>
+            <span id="contactStatus"></span>
+          </div>
+          <div class="header-actions">
+            <button class="icon-btn" aria-label="Llamar">
+              <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.36 2.26.54 3.46.54a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.55 21 3 13.45 3 4.15a1 1 0 0 1 1-1H7.5a1 1 0 0 1 1 1c0 1.2.18 2.36.54 3.46a1 1 0 0 1-.24 1z"/></svg>
+            </button>
+            <button class="icon-btn small-chevron" aria-label="Opciones">
+              <svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"/></svg>
+            </button>
+            <button id="menuButton" class="icon-btn" aria-label="Menú">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div id="menuPanel" class="menu-panel" hidden>
+          <button data-action="search">Buscar</button>
+          <button data-action="date">Ir a una fecha</button>
+          <button data-action="starred">Mensajes destacados</button>
+          <button data-action="theme">Modo oscuro</button>
+          <button data-action="print">Guardar como PDF</button>
+          <button data-action="logout">Cerrar sesión</button>
+        </div>
+
+        <section id="toolPanel" class="tool-panel" hidden>
+          <div id="searchTools" class="tool-row" hidden>
+            <input id="searchInput" type="search" placeholder="Buscar en el chat">
+            <span id="searchCount"></span>
+            <button id="prevResult">↑</button>
+            <button id="nextResult">↓</button>
+            <button id="closeSearch" class="close-tool">×</button>
+          </div>
+          <div id="dateTools" class="tool-row" hidden>
+            <input id="datePicker" type="date">
+            <button id="goDate">Ir</button>
+            <button id="closeDate" class="close-tool">×</button>
+          </div>
+        </section>
+
+        <section id="starredPanel" class="starred-panel" hidden>
+          <header class="starred-header">
+            <button id="closeStarred" class="starred-back">
+              <svg viewBox="0 0 24 24"><path d="M15.5 19 8.5 12l7-7"/></svg>
+            </button>
+            <div>
+              <strong>Mensajes destacados</strong>
+              <span id="starredCount">0 mensajes</span>
+            </div>
+          </header>
+          <div id="starredList" class="starred-list"></div>
+          <footer class="starred-actions">
+            <button id="exportStarred">Exportar</button>
+            <button id="importStarredButton">Importar</button>
+            <input id="importStarredInput" type="file" accept=".json,application/json" hidden>
+          </footer>
+        </section>
+
+        <div id="messageMenu" class="message-menu" hidden>
+          <button id="toggleStarMessage">☆ Destacar</button>
+        </div>
+
+        <main id="chat" class="chat-area"></main>
+
+        <footer class="composer">
+          <div class="composer-box">
+            <button class="composer-icon emoji-button" type="button" aria-label="Emoji">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <circle cx="9" cy="10" r="1"></circle>
+                <circle cx="15" cy="10" r="1"></circle>
+                <path d="M8.2 14.1c1.05 1.35 2.3 2 3.8 2s2.75-.65 3.8-2"></path>
+              </svg>
+            </button>
+            <div class="composer-placeholder">Mensaje</div>
+            <button class="composer-icon" type="button" aria-label="Adjuntar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m8.4 12.7 6.45-6.45a3.15 3.15 0 0 1 4.45 4.45l-7.9 7.9a5 5 0 0 1-7.07-7.07l7.55-7.55"></path>
+              </svg>
+            </button>
+            <button class="composer-icon camera-button" type="button" aria-label="Cámara">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7.5h3.8L9.4 5h5.2l1.6 2.5H20v11.3H4z"></path>
+                <circle cx="12" cy="13" r="3.7"></circle>
+              </svg>
+            </button>
+          </div>
+          <button class="mic-button" type="button" aria-label="Micrófono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="9" y="3" width="6" height="11" rx="3"></rect>
+              <path d="M6.5 11.2a5.5 5.5 0 0 0 11 0M12 16.7V21M9 21h6"></path>
+            </svg>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="chat-cifrado.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
